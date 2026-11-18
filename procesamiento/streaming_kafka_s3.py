@@ -20,7 +20,7 @@ esquema = StructType([
 
 df_kafka = spark.readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("kafka.bootstrap.servers", "kafka:29092") \
     .option("subscribe", "eventos_navegacion") \
     .option("startingOffsets", "latest") \
     .load()
