@@ -46,23 +46,14 @@ services:
     volumes:
       - ./:/app  # Monta tu carpeta actual
     working_dir: /app
-    environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION}
-      - S3_BUCKET=${S3_BUCKET}
 
   spark-worker:
     image: apache/spark:3.5.1-python3
     user: root
-    command: bash -c "pip install -r /app/requirements.txt && /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark:7077"
+    # CAMBIO CLAVE: Sin pip install, solo el comando limpio
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark:7077
     depends_on:
       - spark
     volumes:
       - ./:/app
     working_dir: /app
-    environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION}
-      - S3_BUCKET=${S3_BUCKET}
