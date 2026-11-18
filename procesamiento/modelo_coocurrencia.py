@@ -21,7 +21,6 @@ ruta_salida = "s3a://accesorios-appliances/recomendaciones-coocurrencia/"
 print("Leyendo datos limpios desde S3...")
 df = spark.read.parquet(ruta_limpia)
 
-# === EL CAMBIO CLAVE ESTÁ AQUÍ ===
 # Tomamos una muestra del 5% de los datos para que el join no colapse la memoria
 print("Tomando una muestra del 5% de los datos para agilizar el proceso...")
 df_muestra = df.sample(fraction=0.05, seed=42)
