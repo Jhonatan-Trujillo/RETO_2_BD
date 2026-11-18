@@ -5,6 +5,15 @@ from dotenv import load_dotenv
 import os
 import time
 
+from kafka.admin import KafkaAdminClient, NewTopic
+
+try:
+    admin = KafkaAdminClient(bootstrap_servers='localhost:9092')
+    topic = NewTopic(name='eventos_navegacion', num_partitions=1, replication_factor=1)
+    admin.create_topics([topic])
+except Exception:
+    pass  # El topic ya existe
+
 load_dotenv()
 
 KAFKA_BOOTSTRAP = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
