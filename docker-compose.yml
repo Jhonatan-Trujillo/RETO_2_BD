@@ -50,7 +50,8 @@ services:
   spark-worker:
     image: apache/spark:3.5.1-python3
     user: root
-    command: bash -c "pip install -r /app/requirements.txt && /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark:7077"
+    # CAMBIO CLAVE: Sin pip install, solo el comando limpio
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark:7077
     depends_on:
       - spark
     volumes:
