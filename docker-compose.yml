@@ -34,7 +34,9 @@ services:
       - "7687:7687" # Protocolo Bolt
     environment:
       - NEO4J_AUTH=neo4j/password123
-      - NEO4J_PLUGINS=["graph-data-science"] # Para Louvain/PageRank
+      - NEO4J_PLUGINS=["graph-data-science"]
+    volumes:
+      - neo4j_data:/data  # <--- ESTA ES LA LÍNEA MÁGICA
 
   spark:
     image: apache/spark:3.5.1-python3
@@ -58,3 +60,6 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
+
+volumes:
+  neo4j_data:
