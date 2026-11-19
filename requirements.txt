@@ -3,3 +3,4 @@ kafka-python
 pandas
 python-dotenv
 boto3
+cassandra-driver

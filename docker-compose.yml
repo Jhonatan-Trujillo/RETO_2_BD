@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   zookeeper:
@@ -29,6 +28,8 @@ services:
       - "9042:9042"
     environment:
       - CASSANDRA_CLUSTER_NAME=TallerCluster
+    volumes:
+      - cassandra_data:/var/lib/cassandra
 
   neo4j:
     image: neo4j:5
@@ -49,6 +50,7 @@ services:
     ports:
       - "8080:8080" # Interfaz web
       - "7077:7077" # Puerto del Master
+      - "4040:4040" # Interfaz web de Spark
     volumes:
       - ./:/app  # Monta tu carpeta actual
     working_dir: /app
@@ -66,3 +68,4 @@ services:
 
 volumes:
   neo4j_data:
+  cassandra_data:
