@@ -1,0 +1,169 @@
+cqlsh> USE recomendador;
+cqlsh:recomendador> TRACING ON;
+Now Tracing is enabled
+cqlsh:recomendador> 
+cqlsh:recomendador> -- Q1: últimas sesiones del usuario (más reciente primero)
+cqlsh:recomendador> SELECT * FROM sesiones_por_usuario
+                ... WHERE user_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA' LIMIT 5;
+
+ user_id                      | inicio                          | fin                             | num_eventos | session_id
+------------------------------+---------------------------------+---------------------------------+-------------+-----------------------------------------
+ AFQMMW3VP54Q3H7UTYY2UQ4EL7RA | 2021-07-15 14:09:33.120000+0000 | 2021-07-15 14:30:31.547000+0000 |           4 | AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2021-07-15
+ AFQMMW3VP54Q3H7UTYY2UQ4EL7RA | 2021-06-25 18:00:10.844000+0000 | 2021-06-25 18:00:45.637000+0000 |           2 | AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2021-06-25
+ AFQMMW3VP54Q3H7UTYY2UQ4EL7RA | 2021-01-26 15:21:14.486000+0000 | 2021-01-26 15:21:14.486000+0000 |           1 | AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2021-01-26
+ AFQMMW3VP54Q3H7UTYY2UQ4EL7RA | 2020-10-23 15:52:13.306000+0000 | 2020-10-23 16:06:00.565000+0000 |           2 | AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2020-10-23
+ AFQMMW3VP54Q3H7UTYY2UQ4EL7RA | 2020-03-09 19:01:50.611000+0000 | 2020-03-09 19:01:50.611000+0000 |           1 | AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2020-03-09
+
+(5 rows)
+
+Tracing session: 2baff3d0-e3c5-11f1-85f7-c3f5aab473c1
+
+ activity                                                                                                                          | timestamp                  | source     | source_elapsed | client
+-----------------------------------------------------------------------------------------------------------------------------------+----------------------------+------------+----------------+-----------
+                                                                                                                Execute CQL3 query | 2026-11-19 02:59:00.623000 | 172.19.0.2 |              0 | 127.0.0.1
+ Parsing SELECT * FROM sesiones_por_usuario\nWHERE user_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA' LIMIT 5; [Native-Transport-Requests-1] | 2026-11-19 02:59:00.631000 | 172.19.0.2 |           8140 | 127.0.0.1
+                                                                                 Preparing statement [Native-Transport-Requests-1] | 2026-11-19 02:59:00.631001 | 172.19.0.2 |           8775 | 127.0.0.1
+                                                            Executing single-partition query on sesiones_por_usuario [ReadStage-2] | 2026-11-19 02:59:00.636000 | 172.19.0.2 |          13225 | 127.0.0.1
+                                                                                        Acquiring sstable references [ReadStage-2] | 2026-11-19 02:59:00.636001 | 172.19.0.2 |          13560 | 127.0.0.1
+                                           Skipped 0/0 non-slice-intersecting sstables, included 0 due to tombstones [ReadStage-2] | 2026-11-19 02:59:00.636002 | 172.19.0.2 |          13788 | 127.0.0.1
+                                                                           Merged data from memtables and 0 sstables [ReadStage-2] | 2026-11-19 02:59:00.637000 | 172.19.0.2 |          14225 | 127.0.0.1
+                                                                              Read 5 live rows and 0 tombstone cells [ReadStage-2] | 2026-11-19 02:59:00.640000 | 172.19.0.2 |          17569 | 127.0.0.1
+                                                                                                                  Request complete | 2026-11-19 02:59:00.641610 | 172.19.0.2 |          18610 | 127.0.0.1
+
+
+cqlsh:recomendador> 
+cqlsh:recomendador> -- Q2: eventos de la sesión ordenados por tiempo
+cqlsh:recomendador> SELECT ts, event_type, item_id FROM eventos_por_sesion
+                ... WHERE session_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2014-08-22';
+
+ ts                              | event_type | item_id
+---------------------------------+------------+------------
+ 2014-08-22 14:35:09.000000+0000 |   purchase | B001DHKMCK
+ 2014-08-22 14:35:37.000000+0000 |   purchase | B00HT39LEM
+ 2014-08-22 14:36:30.000000+0000 |   purchase | B0053FA098
+ 2014-08-22 14:37:59.000000+0000 |   purchase | B004XLE48G
+ 2014-08-22 14:38:25.000000+0000 |   purchase | B001TIWG04
+ 2014-08-22 14:38:53.000000+0000 |   purchase | B00DZU7ODI
+ 2014-08-22 14:39:30.000000+0000 |   purchase | B0056NS2JM
+ 2014-08-22 14:40:00.000000+0000 |   purchase | B00DM8KORQ
+ 2014-08-22 14:40:31.000000+0000 |   purchase | B003CLL8Q4
+ 2014-08-22 14:42:18.000000+0000 |   purchase | B00CW0O1EW
+
+(10 rows)
+
+Tracing session: 2bc6fe40-e3c5-11f1-85f7-c3f5aab473c1
+
+ activity                                                                                                                                                    | timestamp                  | source     | source_elapsed | client
+-------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------+------------+----------------+-----------
+                                                                                                                                          Execute CQL3 query | 2026-11-19 02:59:00.772000 | 172.19.0.2 |              0 | 127.0.0.1
+ Parsing SELECT ts, event_type, item_id FROM eventos_por_sesion\nWHERE session_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2014-08-22'; [Native-Transport-Requests-1] | 2026-11-19 02:59:00.773000 | 172.19.0.2 |            382 | 127.0.0.1
+                                                                                                           Preparing statement [Native-Transport-Requests-1] | 2026-11-19 02:59:00.773001 | 172.19.0.2 |            840 | 127.0.0.1
+                                                                                        Executing single-partition query on eventos_por_sesion [ReadStage-2] | 2026-11-19 02:59:00.777000 | 172.19.0.2 |           5102 | 127.0.0.1
+                                                                                                                  Acquiring sstable references [ReadStage-2] | 2026-11-19 02:59:00.778000 | 172.19.0.2 |           5350 | 127.0.0.1
+                                                                     Skipped 0/0 non-slice-intersecting sstables, included 0 due to tombstones [ReadStage-2] | 2026-11-19 02:59:00.778001 | 172.19.0.2 |           5562 | 127.0.0.1
+                                                                                                     Merged data from memtables and 0 sstables [ReadStage-2] | 2026-11-19 02:59:00.778002 | 172.19.0.2 |           5875 | 127.0.0.1
+                                                                                                       Read 10 live rows and 0 tombstone cells [ReadStage-2] | 2026-11-19 02:59:00.778003 | 172.19.0.2 |           5977 | 127.0.0.1
+                                                                                                                                            Request complete | 2026-11-19 02:59:00.779266 | 172.19.0.2 |           7266 | 127.0.0.1
+
+
+cqlsh:recomendador> 
+cqlsh:recomendador> -- Q3: perfil del usuario (ítems con los que interactuó)
+cqlsh:recomendador> SELECT item_id, score, ultima_interaccion FROM items_por_usuario
+                ... WHERE user_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA' LIMIT 10;
+
+ item_id    | score | ultima_interaccion
+------------+-------+---------------------------------
+ B07TXS441N |     5 | 2021-07-15 14:30:31.547000+0000
+ B072ZBFZ3F |     5 | 2021-07-15 14:24:55.011000+0000
+ B0854K96CS |     5 | 2021-07-15 14:12:57.640000+0000
+ B00IXUX6RI |     5 | 2021-07-15 14:09:33.120000+0000
+ B07X4JMDBW |     5 | 2021-06-25 18:00:45.637000+0000
+ B087JX2FSK |     5 | 2021-06-25 18:00:10.844000+0000
+ B07V3CLVKD |     5 | 2021-01-26 15:21:14.486000+0000
+ B07QW3HVBW |     5 | 2020-10-23 16:06:00.565000+0000
+ B0821LP71W |     5 | 2020-10-23 15:52:13.306000+0000
+ B082CY85FD |     5 | 2020-03-09 19:01:50.611000+0000
+
+(10 rows)
+
+Tracing session: 2bebeb60-e3c5-11f1-85f7-c3f5aab473c1
+
+ activity                                                                                                                                                         | timestamp                  | source     | source_elapsed | client
+------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------+------------+----------------+-----------
+                                                                                                                                               Execute CQL3 query | 2026-11-19 02:59:01.014000 | 172.19.0.2 |              0 | 127.0.0.1
+ Parsing SELECT item_id, score, ultima_interaccion FROM items_por_usuario\nWHERE user_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA' LIMIT 10; [Native-Transport-Requests-1] | 2026-11-19 02:59:01.015000 | 172.19.0.2 |            564 | 127.0.0.1
+                                                                                                                Preparing statement [Native-Transport-Requests-1] | 2026-11-19 02:59:01.015001 | 172.19.0.2 |           1041 | 127.0.0.1
+                                                                                              Executing single-partition query on items_por_usuario [ReadStage-3] | 2026-11-19 02:59:01.063000 | 172.19.0.2 |          48388 | 127.0.0.1
+                                                                                                                       Acquiring sstable references [ReadStage-3] | 2026-11-19 02:59:01.064000 | 172.19.0.2 |          49249 | 127.0.0.1
+                                                                          Skipped 0/0 non-slice-intersecting sstables, included 0 due to tombstones [ReadStage-3] | 2026-11-19 02:59:01.064001 | 172.19.0.2 |          49501 | 127.0.0.1
+                                                                                                          Merged data from memtables and 0 sstables [ReadStage-3] | 2026-11-19 02:59:01.072000 | 172.19.0.2 |          57895 | 127.0.0.1
+                                                                                                            Read 10 live rows and 0 tombstone cells [ReadStage-3] | 2026-11-19 02:59:01.073000 | 172.19.0.2 |          58148 | 127.0.0.1
+                                                                                                                                                 Request complete | 2026-11-19 02:59:01.080606 | 172.19.0.2 |          66606 | 127.0.0.1
+
+
+cqlsh:recomendador> 
+cqlsh:recomendador> -- Q4: ítems vistos en la sesión
+cqlsh:recomendador> SELECT item_id FROM eventos_por_sesion
+                ... WHERE session_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2014-08-22';
+
+ item_id
+------------
+ B001DHKMCK
+ B00HT39LEM
+ B0053FA098
+ B004XLE48G
+ B001TIWG04
+ B00DZU7ODI
+ B0056NS2JM
+ B00DM8KORQ
+ B003CLL8Q4
+ B00CW0O1EW
+
+(10 rows)
+
+Tracing session: 2c023280-e3c5-11f1-85f7-c3f5aab473c1
+
+ activity                                                                                                                                    | timestamp                  | source     | source_elapsed | client
+---------------------------------------------------------------------------------------------------------------------------------------------+----------------------------+------------+----------------+-----------
+                                                                                                                          Execute CQL3 query | 2026-11-19 02:59:01.160000 | 172.19.0.2 |              0 | 127.0.0.1
+ Parsing SELECT item_id FROM eventos_por_sesion\nWHERE session_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2014-08-22'; [Native-Transport-Requests-1] | 2026-11-19 02:59:01.161000 | 172.19.0.2 |           1135 | 127.0.0.1
+                                                                                           Preparing statement [Native-Transport-Requests-1] | 2026-11-19 02:59:01.166000 | 172.19.0.2 |           5417 | 127.0.0.1
+                                                                        Executing single-partition query on eventos_por_sesion [ReadStage-2] | 2026-11-19 02:59:01.180000 | 172.19.0.2 |          20200 | 127.0.0.1
+                                                                                                  Acquiring sstable references [ReadStage-2] | 2026-11-19 02:59:01.181000 | 172.19.0.2 |          20435 | 127.0.0.1
+                                                     Skipped 0/0 non-slice-intersecting sstables, included 0 due to tombstones [ReadStage-2] | 2026-11-19 02:59:01.181001 | 172.19.0.2 |          20639 | 127.0.0.1
+                                                                                     Merged data from memtables and 0 sstables [ReadStage-2] | 2026-11-19 02:59:01.181002 | 172.19.0.2 |          20955 | 127.0.0.1
+                                                                                       Read 10 live rows and 0 tombstone cells [ReadStage-2] | 2026-11-19 02:59:01.181003 | 172.19.0.2 |          21079 | 127.0.0.1
+                                                                                                                            Request complete | 2026-11-19 02:59:01.181560 | 172.19.0.2 |          21560 | 127.0.0.1
+
+
+cqlsh:recomendador> 
+cqlsh:recomendador> -- Q5: sesiones del usuario en un rango de fechas
+cqlsh:recomendador> SELECT session_id, inicio, num_eventos FROM sesiones_por_usuario
+                ... WHERE user_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA'
+                ... AND inicio >= '2013-01-01' AND inicio < '2016-01-01';
+
+ session_id                              | inicio                          | num_eventos
+-----------------------------------------+---------------------------------+-------------
+ AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2015-09-10 | 2015-09-10 14:05:27.000000+0000 |           1
+ AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2015-06-22 | 2015-06-22 14:38:31.000000+0000 |           2
+ AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2014-08-22 | 2014-08-22 14:35:09.000000+0000 |          10
+ AFQMMW3VP54Q3H7UTYY2UQ4EL7RA_2014-07-02 | 2014-07-02 14:23:01.000000+0000 |           1
+
+(4 rows)
+
+Tracing session: 4a1fda60-e3c5-11f1-85f7-c3f5aab473c1
+
+ activity                                                                                                                                                                                                      | timestamp                  | source     | source_elapsed | client
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------+------------+----------------+-----------
+                                                                                                                                                                                            Execute CQL3 query | 2026-11-19 02:59:51.686000 | 172.19.0.2 |              0 | 127.0.0.1
+ Parsing SELECT session_id, inicio, num_eventos FROM sesiones_por_usuario\nWHERE user_id = 'AFQMMW3VP54Q3H7UTYY2UQ4EL7RA'\nAND inicio >= '2013-01-01' AND inicio < '2016-01-01'; [Native-Transport-Requests-1] | 2026-11-19 02:59:51.686001 | 172.19.0.2 |            346 | 127.0.0.1
+                                                                                                                                                             Preparing statement [Native-Transport-Requests-1] | 2026-11-19 02:59:51.687000 | 172.19.0.2 |            897 | 127.0.0.1
+                                                                                                                                        Executing single-partition query on sesiones_por_usuario [ReadStage-2] | 2026-11-19 02:59:51.693000 | 172.19.0.2 |           7254 | 127.0.0.1
+                                                                                                                                                                    Acquiring sstable references [ReadStage-2] | 2026-11-19 02:59:51.693001 | 172.19.0.2 |           7534 | 127.0.0.1
+                                                                                                                       Skipped 0/0 non-slice-intersecting sstables, included 0 due to tombstones [ReadStage-2] | 2026-11-19 02:59:51.693002 | 172.19.0.2 |           7779 | 127.0.0.1
+                                                                                                                                                       Merged data from memtables and 0 sstables [ReadStage-2] | 2026-11-19 02:59:51.694000 | 172.19.0.2 |           8102 | 127.0.0.1
+                                                                                                                                                          Read 4 live rows and 0 tombstone cells [ReadStage-2] | 2026-11-19 02:59:51.694001 | 172.19.0.2 |           8261 | 127.0.0.1
+                                                                                                                                                                                              Request complete | 2026-11-19 02:59:51.694751 | 172.19.0.2 |           8751 | 127.0.0.1
+
+
+cqlsh:recomendador> 
