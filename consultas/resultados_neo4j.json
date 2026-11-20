@@ -1,0 +1,11 @@
+{
+  "enfoque": "Neo4j (vecinos)",
+  "precision@10": 0.00895,
+  "recall@10": 0.0895,
+  "aciertos": 179,
+  "usuarios_prueba": 2000,
+  "t_carga_grafo_s": 54.6,
+  "ms_consulta_media": 9.1,
+  "ms_consulta_mediana": 6.7,
+  "ms_consulta_p95": 19.1
+}

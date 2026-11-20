@@ -1,0 +1,32 @@
+[
+  {
+    "enfoque": "Popularidad (baseline)",
+    "precision@10": 0.00195,
+    "recall@10": 0.0195,
+    "aciertos": 39,
+    "usuarios_prueba": 2000,
+    "t_entrenamiento_s": 0,
+    "t_inferencia_s": 5.0,
+    "ms_por_usuario": 2.48
+  },
+  {
+    "enfoque": "Spark co-ocurrencia",
+    "precision@10": 0.0089,
+    "recall@10": 0.089,
+    "aciertos": 178,
+    "usuarios_prueba": 2000,
+    "t_entrenamiento_s": 12.6,
+    "t_inferencia_s": 5.5,
+    "ms_por_usuario": 2.76
+  },
+  {
+    "enfoque": "Spark ALS",
+    "precision@10": 0.004,
+    "recall@10": 0.04,
+    "aciertos": 80,
+    "usuarios_prueba": 2000,
+    "t_entrenamiento_s": 158.9,
+    "t_inferencia_s": 57.3,
+    "ms_por_usuario": 28.67
+  }
+]
